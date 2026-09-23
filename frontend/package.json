@@ -1,0 +1,25 @@
+{
+  "name": "sistema-archivo-rrhh-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "vue": "^3.5.42",
+    "vue-router": "^5.3.1",
+    "vuetify": "4.0.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.9",
+    "vite": "^8.3.0",
+    "vite-plugin-vuetify": "^2.1.3"
+  }
+}

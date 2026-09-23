@@ -1,0 +1,54 @@
+name: archivo-rrhh-prod
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      TZ: America/La_Paz
+    volumes:
+      - datos-db:/var/lib/postgresql
+      - ./database/esquema.sql:/docker-entrypoint-initdb.d/01_esquema.sql:ro
+      - ./database/datos_iniciales.sql:/docker-entrypoint-initdb.d/02_datos_iniciales.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      target: produccion
+    image: archivo-backend:prod
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      TZ: America/La_Paz
+    volumes:
+      - informes:/app/storage/informes
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build: ./frontend
+    image: archivo-web:prod
+    environment:
+      TZ: America/La_Paz
+    ports:
+      - "127.0.0.1:8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  datos-db:
+  informes:

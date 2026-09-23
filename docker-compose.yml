@@ -1,0 +1,56 @@
+name: archivo-rrhh
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: archivo
+      POSTGRES_PASSWORD: archivo123
+      POSTGRES_DB: sistema_archivo_rrhh
+      TZ: America/La_Paz
+    volumes:
+      - datos-db:/var/lib/postgresql
+      - ./database/esquema.sql:/docker-entrypoint-initdb.d/01_esquema.sql:ro
+      - ./database/datos_iniciales.sql:/docker-entrypoint-initdb.d/02_datos_iniciales.sql:ro
+    ports:
+      - "127.0.0.1:5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U archivo -d sistema_archivo_rrhh"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      target: desarrollo
+    image: archivo-backend:dev
+    init: true
+    environment:
+      TZ: America/La_Paz
+    volumes:
+      - ./backend:/app
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    image: node:24
+    init: true
+    working_dir: /app
+    command: ["sh", "-c", "npm ci && npm run dev -- --host 0.0.0.0"]
+    environment:
+      VITE_BACKEND_URL: http://backend:8000
+      TZ: America/La_Paz
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "127.0.0.1:5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  datos-db:

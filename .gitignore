@@ -1,0 +1,17 @@
+backend/.env
+backend/vendor/
+backend/storage/logs/*
+backend/storage/informes/
+
+frontend/node_modules/
+frontend/dist/
+frontend/.env*.local
+
+cookies.txt
+cookies_consulta.txt
+
+*.log
+.DS_Store
+Thumbs.db
+.env.prod
+respaldos/
