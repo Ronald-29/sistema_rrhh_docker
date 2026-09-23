@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: ghcr.io/ronald-29/archivo-backend:1.0.0
+    image: ghcr.io/ronald-29/archivo-backend:b70c0a431130f8fe45a6dfc648b0e36c932c7c2a
     environment:
       DB_HOST: db
       DB_PORT: 5432
@@ -36,7 +36,7 @@ services:
     restart: unless-stopped
 
   web:
-    image: ghcr.io/ronald-29/archivo-web:1.0.0
+    image: ghcr.io/ronald-29/archivo-web:b70c0a431130f8fe45a6dfc648b0e36c932c7c2a
     environment:
       TZ: America/La_Paz
     ports:
