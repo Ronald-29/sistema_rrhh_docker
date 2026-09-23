@@ -1,0 +1,43 @@
+name: Construir y publicar imagenes
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Descargar el codigo
+        uses: actions/checkout@v4
+
+      - name: Entrar al registro
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Construir y publicar el backend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          target: produccion
+          push: true
+          tags: |
+            ghcr.io/ronald-29/archivo-backend:${{ github.sha }}
+            ghcr.io/ronald-29/archivo-backend:latest
+
+      - name: Construir y publicar el web
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          push: true
+          tags: |
+            ghcr.io/ronald-29/archivo-web:${{ github.sha }}
+            ghcr.io/ronald-29/archivo-web:latest
