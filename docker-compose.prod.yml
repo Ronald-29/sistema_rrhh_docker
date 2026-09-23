@@ -20,9 +20,6 @@ services:
     restart: unless-stopped
 
   backend:
-    build:
-      context: ./backend
-      target: produccion
     image: archivo-backend:prod
     environment:
       DB_HOST: db
@@ -39,12 +36,11 @@ services:
     restart: unless-stopped
 
   web:
-    build: ./frontend
     image: archivo-web:prod
     environment:
       TZ: America/La_Paz
     ports:
-      - "127.0.0.1:8080:80"
+      - "${PUERTO_WEB:-127.0.0.1:80}:80"
     depends_on:
       - backend
     restart: unless-stopped
