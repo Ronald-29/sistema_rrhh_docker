@@ -178,3 +178,6 @@ curl -b cookies.txt -o inventario.xlsx http://localhost:8000/api/reportes/invent
 
 Para no ensuciar la BD real: `createdb -T sistema_archivo_rrhh sistema_archivo_rrhh_pruebas`
 (sin conexiones abiertas a la original) y apuntar una copia del backend a esa BD en `.env`.
+
+
+# Solo prueba
