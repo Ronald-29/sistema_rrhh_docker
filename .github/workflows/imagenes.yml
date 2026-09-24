@@ -19,9 +19,8 @@ jobs:
       - name: Entrar al registro
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USUARIO }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Construir y publicar el backend
         uses: docker/build-push-action@v6
@@ -30,8 +29,8 @@ jobs:
           target: produccion
           push: true
           tags: |
-            ghcr.io/ronald-29/archivo-backend:${{ github.sha }}
-            ghcr.io/ronald-29/archivo-backend:latest
+            ronal29/archivo-backend:${{ github.sha }}
+            ronal29/archivo-backend:latest
 
       - name: Construir y publicar el web
         uses: docker/build-push-action@v6
@@ -39,5 +38,5 @@ jobs:
           context: ./frontend
           push: true
           tags: |
-            ghcr.io/ronald-29/archivo-web:${{ github.sha }}
-            ghcr.io/ronald-29/archivo-web:latest
+            ronal29/archivo-web:${{ github.sha }}
+            ronal29/archivo-web:latest
